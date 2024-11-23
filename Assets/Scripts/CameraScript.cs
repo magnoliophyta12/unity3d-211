@@ -11,22 +11,48 @@ public class CameraScript : MonoBehaviour
     private float sensitivityH = 10.0f;
     private float sensitivityV = -3.0f;
     private float minVerticalAngle = 35.0f; 
-    private float maxVerticalAngle = 75.0f; 
+    private float maxVerticalAngle = 75.0f;
+    private float minFpvDistance = 0.9f;
     void Start()
     {
         lookAction = InputSystem.actions.FindAction("Look");
         cameraAngles = this.transform.eulerAngles;
         character = GameObject.Find("Character").transform;
-        r=this.transform.position=character.position;
+        r=this.transform.position-character.position;
+
     }
 
 
     void Update()
     {
+        Vector2 wheel = Input.mouseScrollDelta;
+        if (wheel.y != 0)
+        {
+            if (r.magnitude > minFpvDistance)
+            {
+                float rr = r.magnitude * (1 - wheel.y / 10);
+                if (rr <= minFpvDistance) 
+                {
+                    r *= 0.01f;
+                }
+                else
+                {
+                    r *= (1 - wheel.y / 10);
+                }
+            }
+            else
+            {
+                if (wheel.y < 0)
+                {
+                    r *= 100f;
+                }
+            }
+
+            r *= 1 - wheel.y / 10;
+        }
         Vector2 lookValue=lookAction.ReadValue<Vector2>();
         if(lookValue != Vector2.zero)
         {
-            //this.transform.Rotate(Time.deltaTime * 10 * new Vector3(lookValue.y, lookValue.x, 0));
             cameraAngles.x += lookValue.y * Time.deltaTime * sensitivityH;
             cameraAngles.y += lookValue.x * Time.deltaTime * sensitivityH;
 
