@@ -5,11 +5,13 @@ public class CharacterScript : MonoBehaviour
 {
     private Rigidbody rb;
     private InputAction moveAction;
+    private Transform flashLightTransform;
 
     void Start()
     {
         rb=GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
+        flashLightTransform = transform.Find("Spot Light");
     }
 
 
@@ -31,19 +33,10 @@ public class CharacterScript : MonoBehaviour
         r.y = 0.0f;
         r.Normalize();
 
-        rb.AddForce(250 * Time.deltaTime * //new Vector3(moveValue.x,0,moveValue.y));
+        rb.AddForce(250 * Time.deltaTime * 
             (
                r*moveValue.x+
                f*moveValue.y
             ));
-      /*  Vector2 axisValue = new Vector2(
-            Input.GetAxis("Horizontal"),
-            Input.GetAxis("Vertical"));
-        if (moveValue != Vector2.zero)
-        {
-            Debug.Log(moveValue);
-            Debug.Log(axisValue);
-            Debug.Log("---");
-        }*/
     }
 }
