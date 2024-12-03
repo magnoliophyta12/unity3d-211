@@ -11,7 +11,7 @@ public class CharacterScript : MonoBehaviour
     {
         rb=GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
-        flashLightTransform = transform.Find("Spot Light");
+        flashLightTransform = transform.Find("Flashlight");
     }
 
 

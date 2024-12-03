@@ -3,6 +3,9 @@ using UnityEngine;
 public class FlashlightScript : MonoBehaviour
 {
     private Transform parentTransform;
+    private Light light;
+    private float charge;
+    private float worktime = 1.0f;
 
     void Start()
     {
@@ -11,6 +14,8 @@ public class FlashlightScript : MonoBehaviour
         {
             Debug.LogError("FlashlightScript: parentTransform not found.");
         }
+        light = GetComponent<Light>();
+        charge = 3.0f;
     }
 
 
@@ -19,6 +24,11 @@ public class FlashlightScript : MonoBehaviour
         if (parentTransform == null)
         {
             return;
+        }
+        if (charge > 0 && !GameState.isDay)
+        {
+            light.intensity = charge;
+            charge -= Time.deltaTime / worktime;
         }
         if (GameState.isFpv)
         {
@@ -31,10 +41,14 @@ public class FlashlightScript : MonoBehaviour
             if (f == Vector3.zero)
             {
                 f = Camera.main.transform.up;
-                                             
-               
+
+
             }
             transform.forward = f.normalized;
         }
     }
+     public void RechargeFlashlight()
+     {
+         charge= 3.0f;
+     }
 }
