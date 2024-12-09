@@ -7,11 +7,16 @@ public class KeyPointScript : MonoBehaviour
     [SerializeField]
     private float timeout = 5.0f;
     private float leftTime;
+    private AudioSource pickedInTime;
+    private AudioSource pickedLate;
 
     public float part;
 
     void Start()
     {
+        AudioSource[] audioSources = GetComponents<AudioSource>();
+        pickedInTime = audioSources[0];
+        pickedLate = audioSources[1];
         leftTime = timeout;
         part = 1.0f;
     }
@@ -32,7 +37,18 @@ public class KeyPointScript : MonoBehaviour
         {
             GameState.collectedItems.Add("Key" + keyPointName, part);
             GameState.TriggerGameEvent("KeyPoint", new GameEvents.MessageEvent { message="Знайдено ключ "+ keyPointName,data=part});
-            Destroy(gameObject);
+            if(leftTime > 0)
+            {
+                pickedInTime.Play();
+                Debug.Log(pickedInTime);
+                Destroy(gameObject, pickedInTime.clip.length);
+            }
+            else
+            {
+                pickedLate.Play();
+                Debug.Log(pickedLate);
+                Destroy(gameObject, pickedLate.clip.length);
+            }
         }
     }
 }
