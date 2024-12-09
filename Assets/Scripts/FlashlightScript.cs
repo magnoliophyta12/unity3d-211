@@ -49,7 +49,8 @@ public class FlashlightScript : MonoBehaviour
     }
      public void RechargeFlashlight(float charge)
      {
-         this.charge= charge;
+         this.charge+=charge;
+        Debug.Log(charge);
      }
     public float chargeLevel => charge;
 }

@@ -5,7 +5,11 @@ using UnityEngine;
 public class BatteryScript : MonoBehaviour
 {
     [SerializeField]
+    private string author="Батарея";
+    [SerializeField]
     private float charge;
+    [SerializeField]
+    private float dischargeDuration = 10.0f;
 
     FlashlightScript flashLightScript;
 
@@ -33,18 +37,19 @@ public class BatteryScript : MonoBehaviour
 
     void Update()
     {
-        if(destroyTimeout > 0f)
+        if (destroyTimeout > 0f)
         {
-            destroyTimeout-=Time.deltaTime;
-            if(destroyTimeout <= 0f)
+            destroyTimeout -= Time.deltaTime;
+            if (destroyTimeout <= 0f)
             {
                 Destroy(gameObject);
             }
         }
-        if (leftTime > 0)
+        if (leftTime > 0f)
         {
-            leftTime -= Time.deltaTime;
-            if (leftTime < 0) leftTime = 0;
+            leftTime -= charge / dischargeDuration * Time.deltaTime;
+
+            if (leftTime < 0f) leftTime = 0f;
             part = leftTime / charge;
         }
     }
@@ -55,10 +60,9 @@ public class BatteryScript : MonoBehaviour
         {
             collectSound.Play();
 
-            flashLightScript.RechargeFlashlight(charge);
-
-           // GameObject.Destroy(this.gameObject);
+            flashLightScript.RechargeFlashlight(leftTime);
             destroyTimeout = 1f;
+            GameState.TriggerGameEvent("Battery", new GameEvents.MessageEvent { message = "Ліхтарик підзаряджено на " + leftTime.ToString("F2") + " од.", data = leftTime.ToString("F2") });
         }
     }
     private void OnSoundsVolumeTrigger(string eventName, object data)
