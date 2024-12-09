@@ -15,7 +15,7 @@ public class TimerImageScript : MonoBehaviour
         }
         if(keyPointScript == null )
         {
-            Debug.Log("TimerImageScript: KeyPountScript not found in parent");
+            Debug.Log("TimerImageScript: KeyPointScript not found in parent");
         }
     }
 

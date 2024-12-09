@@ -1,47 +1,56 @@
-using NUnit.Framework;
 using System.Collections.Generic;
-using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
 public class ToastScript : MonoBehaviour
 {
-    public static void ShowToast(string message, float? timeout = null)
-    {
-        /*instance.toastTMP.text= message;
-        instance.leftTime = timeout ?? instance.timeout;
-        instance.content.SetActive(true);*/
-        if(instance.messages.Count>0 && instance.messages.Peek().message== message)
-        {
-            return;
-        }
-        instance.messages.Enqueue(new ToastMessage
-        {
-            message = message,
-            timeout=timeout?? instance.timeout
-        });
-
-    }
     private static ToastScript instance;
     private TMPro.TextMeshProUGUI toastTMP;
     private float timeout = 5.0f;
     private float leftTime;
     private GameObject content;
-    private Queue<ToastMessage> messages=new Queue<ToastMessage>();
+    private readonly Queue<ToastMessage> messages = new Queue<ToastMessage>();
+
+    public static void ShowToast(string message, float? timeout = null)
+    {
+        if (instance.messages.Count > 0 &&
+            instance.messages.Peek().message == message)
+        {
+            return;
+        }
+
+        instance.messages.Enqueue(new ToastMessage
+        {
+            message = message,
+            timeout = timeout ?? instance.timeout
+        });
+    }
+
+    private void OnGameEvent(string eventName, object data)
+    {
+       
+        if(data is GameEvents.INotifier n)
+        {
+            ShowToast(n.message);
+        }
+    }
+
     void Start()
     {
         instance = this;
         content = transform.Find("Content").gameObject;
-        toastTMP=transform.Find("Content/ToastTMP").GetComponent<TMPro.TextMeshProUGUI>();
+        toastTMP = transform.Find("Content/ToastTMP").GetComponent<TMPro.TextMeshProUGUI>();
         content.SetActive(false);
+        //GameState.Subscribe(OnGameEvent, "KeyPoint");
+        //GameState.Subscribe(OnGameEvent, "Door1");
+        GameState.Subscribe(OnGameEvent);
     }
-
 
     void Update()
     {
         if (leftTime > 0)
         {
-            leftTime-=Time.deltaTime;
-            if (leftTime<=0)
+            leftTime -= Time.deltaTime;
+            if (leftTime <= 0)
             {
                 messages.Dequeue();
                 content.SetActive(false);
@@ -51,14 +60,20 @@ public class ToastScript : MonoBehaviour
         {
             if (messages.Count > 0)
             {
-                var m=messages.Peek();
+                var m = messages.Peek();
                 toastTMP.text = m.message;
-                leftTime=m.timeout;
+                leftTime = m.timeout;
                 content.SetActive(true);
             }
-
         }
     }
+
+    private void OnDestroy()
+    {
+        //GameState.Unsubscribe(OnGameEvent, "KeyPoint");
+        //GameState.Unsubscribe(OnGameEvent, "Door1");
+    }
+
     private class ToastMessage
     {
         public string message { get; set; }

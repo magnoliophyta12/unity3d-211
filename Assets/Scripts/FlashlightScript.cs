@@ -5,7 +5,7 @@ public class FlashlightScript : MonoBehaviour
     private Transform parentTransform;
     private Light light;
     private float charge;
-    private float worktime = 1.0f;
+    private float worktime = 10.0f;
 
     void Start()
     {
@@ -15,7 +15,7 @@ public class FlashlightScript : MonoBehaviour
             Debug.LogError("FlashlightScript: parentTransform not found.");
         }
         light = GetComponent<Light>();
-        charge = 3.0f;
+        charge = 1.0f;
     }
 
 
@@ -47,8 +47,9 @@ public class FlashlightScript : MonoBehaviour
             transform.forward = f.normalized;
         }
     }
-     public void RechargeFlashlight()
+     public void RechargeFlashlight(float charge)
      {
-         charge= 3.0f;
+         this.charge= charge;
      }
+    public float chargeLevel => charge;
 }
