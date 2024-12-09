@@ -10,10 +10,10 @@ public class ToastScript : MonoBehaviour
     private GameObject content;
     private readonly Queue<ToastMessage> messages = new Queue<ToastMessage>();
 
-    public static void ShowToast(string message, float? timeout = null)
+    public static void ShowToast(string message, string author = null, float? timeout = null)
     {
         if (instance.messages.Count > 0 &&
-            instance.messages.Peek().message == message)
+            instance.messages.Peek().message == message && instance.messages.Peek().author == author)
         {
             return;
         }
@@ -21,7 +21,8 @@ public class ToastScript : MonoBehaviour
         instance.messages.Enqueue(new ToastMessage
         {
             message = message,
-            timeout = timeout ?? instance.timeout
+            timeout = timeout ?? instance.timeout,
+            author = author
         });
     }
 
@@ -30,7 +31,7 @@ public class ToastScript : MonoBehaviour
        
         if(data is GameEvents.INotifier n)
         {
-            ShowToast(n.message);
+            ShowToast(n.message,n.author);
         }
     }
 
@@ -61,7 +62,7 @@ public class ToastScript : MonoBehaviour
             if (messages.Count > 0)
             {
                 var m = messages.Peek();
-                toastTMP.text = m.message;
+                toastTMP.text = !string.IsNullOrEmpty(m.author) ? $"{m.author}: {m.message}" : m.message;
                 leftTime = m.timeout;
                 content.SetActive(true);
             }
@@ -70,13 +71,13 @@ public class ToastScript : MonoBehaviour
 
     private void OnDestroy()
     {
-        //GameState.Unsubscribe(OnGameEvent, "KeyPoint");
-        //GameState.Unsubscribe(OnGameEvent, "Door1");
+        GameState.Unsubscribe(OnGameEvent);
     }
 
     private class ToastMessage
     {
         public string message { get; set; }
+        public string author { get; set; }
         public float timeout { get; set; }
     }
 }

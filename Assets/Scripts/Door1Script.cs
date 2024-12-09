@@ -4,6 +4,8 @@ using UnityEngine;
 public class Door1Script : MonoBehaviour
 {
     [SerializeField]
+    private string doorName = "Двері 1";
+    [SerializeField]
     private string requiredKey = "1";
     private float openingTime = 3.0f;
     private float timeout = 0f;
@@ -15,14 +17,14 @@ public class Door1Script : MonoBehaviour
         {
             if (GameState.collectedItems.ContainsKey("Key"+requiredKey))
             {
-                GameState.TriggerGameEvent("Door1", new GameEvents.MessageEvent { message = "Двері відчиняються", data = requiredKey });
+                GameState.TriggerGameEvent("Door1", new GameEvents.MessageEvent { message = "Двері відчиняються", author=doorName, data = requiredKey });
                 //ToastScript.ShowToast("Двері будуть відчинені");
                 timeout = openingTime;
                 openedSound.Play();
             }
             else
             {
-                GameState.TriggerGameEvent("Door1", new GameEvents.MessageEvent { message = "Для відкривання двері вам необхідно знайти ключ "+requiredKey, data = requiredKey });
+                GameState.TriggerGameEvent("Door1", new GameEvents.MessageEvent { message = "Для відкривання двері вам необхідно знайти ключ "+requiredKey, author = doorName, data = requiredKey });
                 //ToastScript.ShowToast("Для відкривання двері вам необхідно знайти ключ №1");
                 closedSound.Play();
             }

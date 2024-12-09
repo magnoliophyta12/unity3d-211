@@ -44,7 +44,7 @@ public class GameState
             subscribers[eventName] = new() { action };
         }
     }
-    public static void Unsubscribe(Action<String, object> action, String eventName)
+    public static void Unsubscribe(Action<String, object> action, String eventName=null)
     {
         if (subscribers.ContainsKey(eventName))
         {
