@@ -68,8 +68,8 @@ public class CameraScript : MonoBehaviour
             Vector2 lookValue = lookAction.ReadValue<Vector2>();
             if (lookValue != Vector2.zero)
             {
-                cameraAngles.x += lookValue.y * Time.deltaTime * sensitivityV;
-                cameraAngles.y += lookValue.x * Time.deltaTime * sensitivityH;
+                cameraAngles.x += lookValue.y * Time.deltaTime * GameState.lookSensitivityY;
+                cameraAngles.y += lookValue.x * Time.deltaTime * GameState.lookSensitivityX;
 
                 if (GameState.isFpv)
                 {

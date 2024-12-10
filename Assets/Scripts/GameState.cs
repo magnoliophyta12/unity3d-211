@@ -8,6 +8,9 @@ public class GameState
     public static bool isFpv { get; set; }
     public static float effectsVolume { get; set; }
     public static float ambientVolume { get; set; }
+    public static float musicVolume { get; set; }
+    public static float lookSensitivityX { get; set; } = 5.0f;
+    public static float lookSensitivityY { get; set; } = -3.0f;
     public static Dictionary<String, object> collectedItems { get; set; } = new();
     private const string broadcastKey = "Broadcast";
 
