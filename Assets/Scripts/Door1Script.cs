@@ -9,11 +9,13 @@ public class Door1Script : MonoBehaviour
     private string requiredKey = "1";
     private float openingTime = 3.0f;
     private float timeout = 0f;
+    private float openedPart = 0.5f; //частина, при відкритті якої перемикається room
     private AudioSource closedSound;
     private AudioSource openedSound;
+    private bool isClosed = true;
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == "Character")
+        if (collision.gameObject.name == "Character" && isClosed)
         {
             if (GameState.collectedItems.ContainsKey("Key"+requiredKey))
             {
@@ -43,8 +45,15 @@ public class Door1Script : MonoBehaviour
     {
         if(timeout > 0f)
         {
-            transform.Translate(Time.deltaTime, 0, 0);
-            timeout-=Time.deltaTime;
+            float t = Time.deltaTime / openingTime;
+            transform.Translate(t, 0, 0);
+            if(timeout >= 0.5f && timeout - t < 0.5f)
+            {
+                GameState.room += 1;
+            }
+            timeout -= t;
+            /*transform.Translate(Time.deltaTime, 0, 0);
+            timeout-=Time.deltaTime;*/
         }
     }
 }

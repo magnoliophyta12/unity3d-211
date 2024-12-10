@@ -10,7 +10,7 @@ public class CameraScript : MonoBehaviour
     private InputAction lookAction;
     private float sensitivityH = 10.0f;
     private float sensitivityV = -3.0f;
-    private float minFpvDistance = 0.9f;
+    //private float minFpvDistance = 0.9f;
     private float maxFpvDistance = 15.0f;
     private bool isPos3;
 
@@ -39,10 +39,10 @@ public class CameraScript : MonoBehaviour
             else
             {
                 isPos3 = false;
-                if (r.magnitude >= minFpvDistance)
+                if (r.magnitude >= GameState.minFpvDistance)
                 {
                     float rr = r.magnitude * (1 - wheel.y / 10);
-                    if (rr <= minFpvDistance)
+                    if (rr <= GameState.minFpvDistance)
                     {
                         r *= 0.01f;
                         GameState.isFpv = true;
@@ -56,7 +56,8 @@ public class CameraScript : MonoBehaviour
                 {
                     if (wheel.y < 0)
                     {
-                        r *= 100f;
+                        // r *= 100f;
+                        r *= (1 - wheel.y / 10);
                         GameState.isFpv = false;
                     }
                 }

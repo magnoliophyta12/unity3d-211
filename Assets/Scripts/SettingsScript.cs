@@ -9,6 +9,7 @@ public class SettingsScript : MonoBehaviour
     private Slider musicSlider;
     private Slider sensitivityXSlider;
     private Slider sensitivityYSlider;
+    private Slider fpvSlider;
     private Toggle linkToggle;
     private Toggle muteAllToggle;
     void Start()
@@ -30,7 +31,9 @@ public class SettingsScript : MonoBehaviour
 
         sensitivityXSlider = contentTransform.Find("Controls/xSensitivitySlider").GetComponent<Slider>();
         sensitivityYSlider = contentTransform.Find("Controls/ySensitivitySlider").GetComponent<Slider>();
+        fpvSlider = contentTransform.Find("Controls/FpvSlider").GetComponent<Slider>();
         linkToggle = contentTransform.Find("Controls/LinkToggle").GetComponent<Toggle>();
+        OnFpvSliderChanged(fpvSlider.value);
 
         OnSensitivityXSliderChanged(sensitivityXSlider.value);
         if(!linkToggle.isOn) OnSensitivityYSliderChanged(sensitivityYSlider.value);
@@ -111,7 +114,12 @@ public class SettingsScript : MonoBehaviour
             musicSlider.enabled = true;
         }
     }
-  
+
+    public void OnFpvSliderChanged(float value)
+    {
+        GameState.minFpvDistance = Mathf.Lerp(0.5f, 1.5f, value);
+    }
+
     public void OnSensitivityXSliderChanged(float value)
     {
         float sens=Mathf.Lerp(1,10,value);
